@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rescue System</title>
+<link href="https://fonts.googleapis.com/css2?family=Bungee+Tint&display=swap" rel="stylesheet">
+
+<style>
+  
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at top, #0f2027, #020617);
+  color: white;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* background glow */
+body::before {
+  content: "";
+  position: absolute; 
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(0,255,255,0.1), transparent),
+    radial-gradient(circle at 80% 70%, rgba(255,0,150,0.1), transparent);
+  z-index: -1;
+}
+
+h1, h2 {
+  font-family: 'Bungee Tint', cursive;
+  letter-spacing: 2px;
+  color: white;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100vh;
+  background: linear-gradient(180deg, #020617, #0f172a);
+  padding: 25px 15px;
+}
+
+.sidebar h2 {
+  font-size: 22px;
+  margin-bottom: 30px;
+  color: #ff4b5c;
+}
+
+.sidebar p {
+  padding: 12px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: 0.3s;
+}
+
+.sidebar p:hover {
+  background: rgba(0,255,255,0.1);
+  color: white;
+}
+
+.sidebar p b {
+  color: #00f2ff;
+}
+
+/* ================= MAIN ================= */
+.main {
+  margin-left: 220px;
+  padding: 20px;
+}
+
+/* ================= TOPBAR ================= */
+.topbar {
+  position: relative;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.topbar h2 {
+  font-size: 48px;
+  color: #ff4b4b;
+  margin-top: 20px;
+}
+
+/* ================= LIVE FIX ================= */
+.live {
+  position: fixed;
+   margin-top: 45px;
+  right: 30px;
+  z-index: 9999;
+
+  background: linear-gradient(45deg, #ff3b3b, #ff0000);
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+
+  box-shadow: 0 0 15px rgba(255,0,0,0.7);
+  animation: pulseLive 1.5s infinite;
+}
+
+@keyframes pulseLive {
+  0% { box-shadow: 0 0 5px red; }
+  50% { box-shadow: 0 0 20px red; }
+  100% { box-shadow: 0 0 5px red; }
+}
+
+/* ================= GRID ================= */
+.grid {
+  display: flex;
+  gap: 25px;
+  margin-left: 40px;
+
+  margin-top: 20px;
+}
+
+/* LEFT BIG CARD */
+.card.big {
+  flex: 1;
+  max-width: none;
+}
+
+/* ================= MAP ================= */
+.map {
+  height: 450px;
+  width: 100%;
+
+  border-radius: 20px;
+  background: radial-gradient(circle at center, #0f2027, #020617);
+  border: 1px solid rgba(0,255,255,0.2);
+
+  text-align: center;
+  line-height: 450px;
+  color: #94a3b8;
+}
+
+/* ================= BUTTON ================= */
+.btn {
+  margin-top: 20px;
+
+  background: linear-gradient(45deg, #ffd43b, #ffae00);
+  padding: 12px 28px;
+  border-radius: 30px;
+  border: none;
+
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ================= BOTTOM ================= */
+.bottom {
+  margin-top: 30px;
+  padding: 20px;
+
+  border-radius: 18px;
+  width: 100%;
+
+  box-sizing: border-box;   /* 🔥 overflow fix */
+}
+
+/* progress */
+#progressBar2 {
+  height: 10px;
+  background: #22c55e;
+  border-radius: 10px;
+}
+
+/* ================= ALERT FIX ================= */
+.alert-card {
+  margin-top: 15px;
+
+  width: 100%;
+  box-sizing: border-box;   /* 🔥 FIX */
+
+  background: rgba(255, 0, 0, 0.08);
+  border: 1px solid rgba(255, 0, 0, 0.4);
+
+  padding: 14px;
+  border-radius: 15px;
+
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+
+  animation: alertPulse 1.5s infinite;
+}
+
+@keyframes alertPulse {
+  0% { box-shadow: 0 0 10px rgba(255,0,0,0.2); }
+  50% { box-shadow: 0 0 25px rgba(255,0,0,0.5); }
+  100% { box-shadow: 0 0 10px rgba(255,0,0,0.2); }
+}
+
+/* ================= RIGHT SIDE ================= */
+.side {
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* cards */
+.side-card {
+  padding: 15px;
+  border-radius: 15px;
+
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(0,255,255,0.2);
+}
+
+.progress-box {
+  background: #1f2937;
+  height: 8px;
+  border-radius: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #22c55e;
+}
+</style>
+</head>
+
+<body>
+
+<body>
+
+  <div class="live">LIVE</div>
+
+<div class="sidebar">
+  <h2>🚑 Rescue</h2>
+  <p>Dashboard</p>
+  <p>Active Alerts</p>
+  <p><b>Rescue Ops</b></p>
+  <p>Healthcare</p>
+</div>
+
+<div class="main">
+
+  <div class="topbar">
+    <h2>Rescue System</h2>
+  </div>
+
+    <div class="grid">
+
+    <!-- LEFT SIDE -->
+      <div class="card big">
+
+        <div class="map" id="map">
+            🚑 Tracking Active...
+            <br><small>Simulation Running</small>
+        </div>
+
+        <button class="btn" onclick="goDetails()">
+            View Full Rescue Info →
+        </button>
+
+        <div class="bottom">
+            <h3>🚑 Ambulance Progress</h3>
+
+            <div style="background:#222; border-radius:10px;">
+                <div id="progressBar2" style="height:10px; width:0%; background:#22c55e;"></div>
+            </div>
+
+            <p id="progressText2">0% completed</p>
+
+            <h3>🚨 Active Alert</h3>
+
+            <div class="alert-card">
+               <p id="alertID">ID: --</p>
+               <p id="alertTime">Time: --</p>
+               <p id="alertFlow">Contact 1 → Contact 2 → Emergency</p>
+            </div>
+
+            <div id="dashboard"></div>
+
+         </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="side">
+        <!-- Hospital -->
+    <div class="card side-card">
+        <h3>🏥 Hospital</h3>
+        <p id="hospitalName">Searching...</p>
+        <p id="hospitalDetails">Loading...</p>
+        <p id="hospitalLogic" style="font-size:12px; color:#94a3b8;">
+        Selecting best hospital...
+        </p>
+
+        <div id="hospitalList" style="font-size:12px; color:#94a3b8; margin-top:6px;"></div>
+
+        <p id="ambulanceStatus" style="font-size:12px; color:#38bdf8; margin-top:6px;"></p>
+
+        <div style="margin-top:8px; font-size:12px; color:#22c55e;">
+  🧠 AI Decision Engine Active
+        </div>
+   </div>
+
+    <!-- Patient -->
+    <div class="card side-card">
+  <h3>👤 Patient</h3>
+  <p>Blood: O+</p>
+  <p>Allergy: Penicillin</p>
+
+  <p id="patientCondition">Checking condition...</p>
+  <p id="patientPriority"></p>
+  <p id="patientAdvice"></p>
+</div>
+
+    <!-- Ambulance -->
+    <div class="card side-card">
+        <h3>🚑 Ambulance</h3>
+        <p>Driver: Ravi Kumar</p>
+
+        <p id="ambulanceETA">ETA: --</p>
+        <p id="distanceLeft">Distance: --</p>
+        <p id="statusText">🚑 Starting...</p>
+
+        <div class="progress-box">
+            <div id="progressBar" class="progress-fill"></div>
+        </div>
+
+        <p id="progressText">0%</p>
+    </div>
+        <div class="card side-card">
+  <h3>📊 Incident Summary</h3>
+  <p id="incidentSummary" style="font-size:13px; color:#94a3b8;">
+    Generating summary...
+  </p>
+</div>
+<div class="card side-card">
+  <h3>🚑 Emergency Response</h3>
+
+  <p id="responseStatus">Initializing...</p>
+  <p id="responseTime"></p>
+  <p id="responsePriority"></p>
+
+</div>
+    </div>
+
+</div>
+
+<script>
+
+// 🚑 SAFE SIMULATION ENGINE
+
+function startSimulation() {
+
+  const hospitals = [
+  { name: "City Care Hospital", rating: 4.5, distance: 2.3 },
+  { name: "Apollo Emergency Center", rating: 4.8, distance: 3.1 },
+  { name: "LifeLine Hospital", rating: 4.2, distance: 1.8 }
+];
+
+  function selectBestHospital(hospitals) {
+
+  return hospitals.reduce((best, current) => {
+
+    let bestScore = best.distance - best.rating;
+    let currentScore = current.distance - current.rating;
+
+    return currentScore < bestScore ? current : best;
+
+  });
+
+}
+
+const hospital = selectBestHospital(hospitals);
+
+console.log("Selected hospital:", hospital);
+
+  document.getElementById("hospitalName").innerText = hospital.name;
+  document.getElementById("hospitalDetails").innerText =
+  "⭐ " + hospital.rating + " • " + hospital.distance + " km";
+
+  let progress = 0;
+  const totalTime = 100;
+  const totalDistance = 3.0;
+
+  const interval = setInterval(() => {
+
+    progress++;
+
+    let percent = (progress / totalTime) * 100;
+    let eta = Math.ceil((totalTime - progress) / 10);
+    let dist = (totalDistance * (1 - percent / 100)).toFixed(2);
+
+    document.getElementById("ambulanceETA").innerText = "ETA: " + eta + " min";
+    document.getElementById("distanceLeft").innerText = "Distance: " + dist + " km";
+
+    document.getElementById("progressBar").style.width = percent + "%";
+    document.getElementById("progressBar2").style.width = percent + "%";
+
+    document.getElementById("progressText").innerText = Math.floor(percent) + "%";
+    document.getElementById("progressText2").innerText =
+      Math.floor(percent) + "% completed";
+
+    if (percent < 30) {
+      document.getElementById("statusText").innerText = "🚑 Dispatching...";
+    } else if (percent < 80) {
+      document.getElementById("statusText").innerText = "🚑 On the way...";
+    } else {
+      document.getElementById("statusText").innerText = "🏥 Arriving...";
+    }
+
+    if (percent >= 100) {
+      clearInterval(interval);
+      document.getElementById("statusText").innerText = "✅ Arrived!";
+      document.getElementById("ambulanceETA").innerText = "ETA: Arrived";
+      document.getElementById("distanceLeft").innerText = "Distance: 0 km";
+    }
+
+  }, 1000);
+}
+
+function goDetails() {
+  window.location.href = "details.html";
+}
+
+window.onload = startSimulation;
+
+</script>
+<script>
+function initMap() {
+  const location = { lat: 26.8467, lng: 80.9462 };
+
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 14,
+    center: location,
+  });
+
+  new google.maps.Marker({
+    position: location,
+    map: map
+  });
+}
+</script>
+
+<script src="script.js"></script>
+
+<script>
+  startSimulation();
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSOuyeV8dgYRDpfHTShbzfxDk5kyqxnoQ&callback=initMap" async defer></script>
+</body>
+</html>

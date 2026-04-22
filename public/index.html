@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Accident Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bungee+Tint&display=swap" rel="stylesheet">
+
+
+<style>
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at top, #0f2027, #020617);
+  color: white;
+  overflow-x: hidden;
+}
+
+/* ✨ glow particles effect */
+body::before {
+  content: "";
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 30%, rgba(0,255,255,0.1), transparent),
+              radial-gradient(circle at 80% 70%, rgba(255,0,150,0.1), transparent);
+  z-index: -1;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0; 
+  width: 100%;
+  box-sizing: border-box;
+  background: linear-gradient(90deg, transparent, rgba(0,255,255,0.1), transparent);
+  border-bottom: 1px solid rgba(0,255,255,0.2);
+  box-shadow: 0 0 20px rgba(0,255,255,0.2);
+  overflow: hidden;
+}
+
+.header h1 {
+  font-family: 'Bungee Tint', cursive;
+  font-size: 38px;
+  letter-spacing: 2.5px;
+  color: white;
+  text-shadow: none;
+  margin: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* STATS */
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin: 20px 0;
+}
+
+.stat-card {
+  min-width: 180px;
+  text-align: center;
+  padding: 14px 28px;
+  font-size: 16px;
+
+  background: rgba(255,255,255,0.08);   /* 🔥 visible background */
+  border-radius: 13px;
+  backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(0,255,255,0.3);  /* 🔥 glow border */
+  box-shadow: 0 0 10px rgba(0,255,255,0.15);
+  transition: 0.3s;
+}
+.stat-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 23px rgba(0,255,255,0.5);
+}
+
+/* BUTTON */
+.center-btn {
+  text-align: center;
+  margin: 20px;
+}
+
+/* GRID */
+.grid {
+  display: flex;
+  gap: 20px;
+  padding: 20px 0;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+/* CARDS */
+.top-cards {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.top-cards .card:nth-child(1) {
+  border-color: rgba(255,80,80,0.4);
+}
+
+.top-cards .card:nth-child(2) {
+  border-color: rgba(0,255,150,0.4);
+}
+
+.top-cards .card:nth-child(3) {
+  border-color: rgba(255,200,0,0.4);
+}
+
+.top-cards .card:nth-child(4) {
+  border-color: rgba(0,200,255,0.4)
+}
+
+/* NEON BORDER GLOW */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 25px;
+  padding: 2px;
+  box-shadow: 0 0 30px rgba(0,255,255,0.6);
+  background: linear-gradient(45deg, cyan, magenta);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 0 10px cyan,
+    0 0 20px magenta;
+}
+.alert-card {
+  padding: 15px;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(0,255,255,0.2);
+  box-shadow: 0 0 10px rgba(0,255,255,0.2);
+}
+
+.green {
+  color: #00ff9f;
+}
+
+.big {
+  flex: 2;
+  min-width: 600px;
+}
+
+.side {
+  flex: 1;
+  min-width: 300px;   
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.small {
+  height: 250px;
+}
+
+/* MAP */
+#map {
+  height: 300px;
+  border-radius: 20px;
+  margin-top: 10px;
+  width: 100%;
+}
+.map-overlay {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+
+  background: rgba(0,0,0,0.6);
+  padding: 10px 18px;
+  border-radius: 15px;
+
+  display: flex;
+  gap: 15px;
+  font-size: 14px;
+
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0,255,255,0.3);
+}
+
+.map-overlay .danger {
+  color: red;
+}
+.card.big {
+  position: relative;
+}
+
+button {
+  background: linear-gradient(45deg, #ff4b5c, #ff7a7a);
+  border: none;
+  padding: 15px 40px;
+  border-radius: 40px;
+  font-size: 18px;
+  color: white;
+  box-shadow: 0 0 15px rgba(255,80,80,0.5);
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(255,80,80,0.8);
+}
+
+.live {
+  background: linear-gradient(45deg, #ff3b3b, #ff0000);
+
+  padding: 12px 26px;
+  border-radius: 25px;
+  position: relative;
+  flex-shrink: 0;
+  margin-left: 20px;
+  margin-right: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  max-width: 1200px;
+
+  box-shadow: 0 0 15px rgba(255,0,0,0.6);
+  letter-spacing: 1px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  animation: pulseLive 1.5s infinite;
+}
+
+/* 🔥 Glow pulse */
+@keyframes pulseLive {
+  0% { box-shadow: 0 0 5px red; }
+  50% { box-shadow: 0 0 25px red; }
+  100% { box-shadow: 0 0 5px red; }
+}
+
+/* 🔴 blinking dot */
+.live::before {
+  content: "●";
+  color: #ff0000;
+  font-size: 14px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  padding: 20px;
+  border-radius: 25px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(0,255,255,0.2);
+  box-sizing: border-box;   
+  overflow: hidden;
+}
+
+#alertList {
+  list-style: none;
+  padding: 0;
+}
+
+#alertList li {
+  margin: 5px 0;
+  color: #00ffcc;
+}
+
+/* 🚨 FULL SCREEN RED FLASH */
+#flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: red;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* FLASH ANIMATION */
+@keyframes redFlash {
+  0% { opacity: 0; }
+  30% { opacity: 0.7; }
+  60% { opacity: 0; }
+  100% { opacity: 0.7; }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="flash"></div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>📊 Live Accident Alert Dashboard</h1>
+    <div class="live">LIVE</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card">🚨 Active <span id="active">0</span></div>
+    <div class="stat-card">✅ Resolved <span id="resolved">0</span></div>
+    <div class="stat-card">⚠️ Pending <span id="pending">0</span></div>
+    <div class="stat-card">🛡 Safety <span>98%</span></div>
+  </div>
+
+  <!-- BUTTON -->
+  <div class="center-btn">
+    <button onclick="confirmRescue()">🚨 Simulate Accident</button>
+  </div>
+  <!-- ALERT LIST -->
+  <ul id="alertList" style="margin-top:10px; text-align:center;"></ul>
+  <p id="status" style="
+  text-align:center;
+  margin-top:10px;
+  font-weight:bold;
+  color:#00ffcc;
+"></p>
+
+  <!-- MAIN GRID -->
+  <div class="grid">
+
+    <!-- MAP CARD -->
+    <div class="card big">
+      <h3>📍 Live Location</h3>
+      <div id="map">
+        <div class="map-overlay">
+  <span>🚗 Speed: <b>90 km/h</b></span>
+  <span>💥 Impact: <b class="danger">HIGH</b></span>
+</div>
+      </div>
+
+      <div class="recent">
+        <p>📍 Recent Accident</p>
+        <span id="locationText">No data</span>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="side">
+
+      <div class="card small">
+        <h3>📊 Alert Stats</h3>
+        <canvas id="chart" height="150"></canvas>
+      </div>
+
+      <div class="card small">
+        <h3>🚨 Active Alerts</h3>
+        <div id="dashboard"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const ctx = document.getElementById('chart');
+
+const alertChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Active', 'Resolved', 'Pending'],
+    datasets: [{
+  label: 'Alerts',
+  data: [1, 1, 0],
+
+  
+  borderColor: '#00f2ff',
+  backgroundColor: 'rgba(0,242,255,0.2)',
+  pointBackgroundColor: '#00f2ff',
+  pointRadius: 6,
+
+  borderWidth: 3,
+  tension: 0.4,
+  fill: true,
+  borderCapStyle: "round",
+      borderJoinStyle: "round"
+    }]
+  },
+
+  options: {
+    responsive: true,
+
+    animation: {
+      duration: 1500,
+      easing: "easeInOutQuart"
+    },
+
+    plugins: {
+      legend: {
+        display: false,
+      
+        labels: {
+          color: "#ffffff",
+          font: {
+            size: 14
+          }
+        }
+      }
+    },
+
+    scales: {
+      x: {
+        ticks: {
+          color: "#94a3b8"
+        },
+        grid: {
+          color: "rgba(255,255,255,0.05)"
+        }
+      },
+      y: {
+        ticks: {
+          color: "#94a3b8"
+        },
+        grid: {
+          color: "rgba(255,255,255,0.05)"
+        }
+      }
+    }
+  }
+});
+</script>
+
+ <script>
+  function confirmRescue() {
+    if (confirm("🚑 Start Rescue Operation?")) {
+       startRescue(); 
+    }
+}
+function initMap() {
+  const map = new google.maps.Map(document.getElementById("map"), {
+    center: { lat: 25.3176, lng: 82.9739 },
+    zoom: 13
+  });
+}
+</script>
+<script src="/script.js"></script>
+
+<script async defer 
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSOuyeV8dgYRDpfHTShbzfxDk5kyqxnoQ&callback=initMap"></script>
+
+</body>
+</html>
